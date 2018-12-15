@@ -1,0 +1,40 @@
+{
+  "required": true,
+  "package": "juuxel.watereddown.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AnvilWaterlogMixin",
+    "BlockShadowMixin",
+    "BrewingStandWaterlogMixin",
+    "BellWaterlogMixin",
+    "GrindstoneWaterlogMixin",
+    "DaylightDetectorWaterlogMixin",
+    "LecternWaterlogMixin",
+    "EnchantingTableWaterlogMixin",
+    "StonecutterWaterlogMixin",
+    "HopperWaterlogMixin",
+    "CactusWaterlogMixin",
+    "LanternWaterlogMixin",
+    "CauldronWaterFillMixin",
+    "LeverWaterlogMixin",
+    "WallMountedBlockShadowMixin",
+    "AbstractRailWaterlogMixin",
+    "RailWaterlogMixin",
+    "PoweredRailWaterlogMixin",
+    "DetectorRailWaterlogMixin",
+    "StandingBannerWaterlogMixin",
+    "WallBannerWaterlogMixin",
+    "DoorWaterlogMixin",
+    "BedWaterlogMixin",
+    "RedstoneWireWaterlogMixin",
+    "RepeaterWaterlogMixin",
+    "ComparatorWaterlogMixin",
+    "RedstoneGateWaterlogMixin",
+    "PressurePlateWaterlogMixin",
+    "WeightedPressurePlateWaterlogMixin",
+    "BlockReplacementMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
