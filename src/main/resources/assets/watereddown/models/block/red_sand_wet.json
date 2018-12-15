@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "watereddown:block/red_sand_wet"
+    }
+}

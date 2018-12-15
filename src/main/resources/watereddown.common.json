@@ -32,7 +32,8 @@
     "RedstoneGateWaterlogMixin",
     "PressurePlateWaterlogMixin",
     "WeightedPressurePlateWaterlogMixin",
-    "BlockReplacementMixin"
+    "BlockReplacementMixin",
+    "SandWaterlogMixin"
   ],
   "injectors": {
     "defaultRequire": 1

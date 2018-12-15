@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "waterlogged=false": [
+            { "model": "block/sand" },
+            { "model": "block/sand", "y": 90 },
+            { "model": "block/sand", "y": 180 },
+            { "model": "block/sand", "y": 270 }
+        ],
+        "waterlogged=true": [
+            { "model": "watereddown:block/sand_wet" },
+            { "model": "watereddown:block/sand_wet", "y": 90 },
+            { "model": "watereddown:block/sand_wet", "y": 180 },
+            { "model": "watereddown:block/sand_wet", "y": 270 }
+        ]
+    }
+}
