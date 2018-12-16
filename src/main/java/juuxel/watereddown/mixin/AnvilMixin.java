@@ -4,11 +4,11 @@
  */
 package juuxel.watereddown.mixin;
 
-import juuxel.watereddown.api.Dualloggable;
-import juuxel.watereddown.api.Lavaloggable;
+import juuxel.watereddown.api.WDProperties;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
@@ -23,16 +23,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilBlock.class)
-@Implements(@Interface(iface = Dualloggable.class, prefix = "waterlog$"))
+@Implements(@Interface(iface = Waterloggable.class, prefix = "waterlog$"))
 public abstract class AnvilMixin extends BlockMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstruct(Block.Settings var1, CallbackInfo info) {
-        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false).with(Lavaloggable.LAVALOGGED, false));
+        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false).with(WDProperties.LAVALOGGED, false));
     }
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(Properties.WATERLOGGED).with(Lavaloggable.LAVALOGGED);
+        var1.with(Properties.WATERLOGGED).with(WDProperties.LAVALOGGED);
     }
 
     @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
@@ -40,7 +40,7 @@ public abstract class AnvilMixin extends BlockMixin {
         try {
             FluidState state = context.getWorld().getFluidState(context.getPos());
             info.setReturnValue(info.getReturnValue()
-                    .with(Lavaloggable.LAVALOGGED, state.matches(FluidTags.LAVA))
+                    .with(WDProperties.LAVALOGGED, state.matches(FluidTags.LAVA))
                     .with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
         } catch (NullPointerException e) {}
     }

@@ -4,6 +4,7 @@
  */
 package juuxel.watereddown.mixin;
 
+import juuxel.watereddown.api.WDProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
@@ -26,19 +27,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class HopperMixin extends BlockMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstruct(Block.Settings var1, CallbackInfo info) {
-        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false));
+        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false).with(WDProperties.LAVALOGGED, false));
     }
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(Properties.WATERLOGGED);
+        var1.with(Properties.WATERLOGGED).with(WDProperties.LAVALOGGED);
     }
 
     @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
     private void replacePlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
         try {
             FluidState state = context.getWorld().getFluidState(context.getPos());
-            info.setReturnValue(info.getReturnValue().with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
+            info.setReturnValue(info.getReturnValue()
+                    .with(WDProperties.LAVALOGGED, state.matches(FluidTags.LAVA))
+                    .with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
         } catch (NullPointerException e) {}
     }
 }

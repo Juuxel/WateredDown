@@ -4,6 +4,7 @@
  */
 package juuxel.watereddown.mixin;
 
+import juuxel.watereddown.api.WDProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StonecutterBlock;
@@ -26,17 +27,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class StonecutterMixin extends BlockMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstruct(Block.Settings var1, CallbackInfo info) {
-        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false));
+        setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false).with(WDProperties.LAVALOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(Properties.WATERLOGGED);
+        var1.with(Properties.WATERLOGGED).with(WDProperties.LAVALOGGED);
     }
 
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        FluidState state = context.getWorld().getFluidState(context.getPos());
-        info.setReturnValue(info.getReturnValue().with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
+        try {
+            FluidState state = context.getWorld().getFluidState(context.getPos());
+            info.setReturnValue(info.getReturnValue()
+                    .with(WDProperties.LAVALOGGED, state.matches(FluidTags.LAVA))
+                    .with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
+        } catch (NullPointerException e) {}
     }
 }
