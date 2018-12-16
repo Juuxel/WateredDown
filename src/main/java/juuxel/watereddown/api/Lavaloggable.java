@@ -27,7 +27,7 @@ public interface Lavaloggable extends class_2263, class_2402 {
 
     default boolean method_10311(IWorld var1, BlockPos var2, BlockState var3, FluidState var4) {
         if (!(Boolean)var3.get(LAVALOGGED) && var4.getFluid() == Fluids.LAVA) {
-            if (!var1.isRemote()) {
+            if (!var1.isClient()) {
                 var1.setBlockState(var2, (BlockState)var3.with(LAVALOGGED, true), 3);
                 var1.getFluidTickScheduler().schedule(var2, var4.getFluid(), var4.getFluid().method_15789(var1));
             }

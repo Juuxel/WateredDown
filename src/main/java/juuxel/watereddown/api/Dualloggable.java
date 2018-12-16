@@ -29,7 +29,7 @@ public interface Dualloggable extends class_2263, class_2402 {
 
         if ((!(Boolean)var3.get(Lavaloggable.LAVALOGGED) && fluid == Fluids.LAVA) ||
                 (!(Boolean)var3.get(Properties.WATERLOGGED) && fluid == Fluids.WATER)) {
-            if (!var1.isRemote()) {
+            if (!var1.isClient()) {
                 var1.setBlockState(var2, (BlockState)var3.with(fluid == Fluids.LAVA ? Lavaloggable.LAVALOGGED : Properties.WATERLOGGED, true), 3);
                 var1.getFluidTickScheduler().schedule(var2, var4.getFluid(), var4.getFluid().method_15789(var1));
             }
