@@ -4,6 +4,7 @@
  */
 package juuxel.watereddown.mixin;
 
+import juuxel.watereddown.api.Lavaloggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
@@ -34,6 +35,8 @@ public abstract class BlockMixin {
     public FluidState getFluidState(BlockState state) {
         if (stateFactory.getProperties().contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED))
             return Fluids.WATER.getState(false);
+        else if (stateFactory.getProperties().contains(Lavaloggable.LAVALOGGED) && state.get(Lavaloggable.LAVALOGGED))
+            return Fluids.LAVA.getState(false);
 
         return Fluids.EMPTY.getDefaultState();
     }
