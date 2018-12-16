@@ -71,7 +71,7 @@ public abstract class CauldronMixin extends BlockMixin {
         int var11 = var1.get(field_10745);
         Item item = stack.getItem();
         if (!info.getReturnValue() && item == Items.LAVA_BUCKET) {
-            if (var11 < 3 && !var2.isRemote) {
+            if (var11 < 3 && !var2.isClient) {
                 if (!var4.abilities.creativeMode) {
                     var4.setStackInHand(var5, new ItemStack(Items.BUCKET));
                 }
