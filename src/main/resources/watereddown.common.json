@@ -33,7 +33,9 @@
     "PressurePlateWaterlogMixin",
     "WeightedPressurePlateWaterlogMixin",
     "BlockReplacementMixin",
-    "SandWaterlogMixin"
+    "SandWaterlogMixin",
+    "PistonWaterlogMixin",
+    "PistonHeadWaterlogMixin"
   ],
   "injectors": {
     "defaultRequire": 1

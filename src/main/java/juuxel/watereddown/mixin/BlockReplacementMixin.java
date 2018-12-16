@@ -4,9 +4,7 @@
  */
 package juuxel.watereddown.mixin;
 
-import juuxel.watereddown.block.LeverBlockExtension;
-import juuxel.watereddown.block.PoweredRailBlockExtension;
-import juuxel.watereddown.block.RailBlockExtension;
+import juuxel.watereddown.block.*;
 import net.fabricmc.fabric.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.sound.BlockSoundGroup;
