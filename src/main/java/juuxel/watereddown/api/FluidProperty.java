@@ -19,6 +19,7 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
     public static final Wrapper EMPTY = new Wrapper(Fluids.EMPTY);
     public static final Wrapper WATER = new Wrapper(Fluids.WATER);
     public static final Wrapper LAVA = new Wrapper(Fluids.LAVA);
+    private static final String COLON_REPLACEMENT = "_wd_";
 
     private FluidProperty(String var1) {
         super(var1, Wrapper.class);
@@ -31,7 +32,7 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
 
     @Override
     public Optional<Wrapper> getValue(String var1) {
-        Identifier id = new Identifier(var1.replace("__", ":"));
+        Identifier id = new Identifier(var1.replace(COLON_REPLACEMENT, ":"));
         if (Registry.FLUID.contains(id)) {
             return Optional.of(new Wrapper(Registry.FLUID.get(id)));
         }
@@ -41,7 +42,7 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
 
     @Override
     public String getValueAsString(Wrapper var1) {
-        return Registry.FLUID.getId(var1.fluid).toString().replace(":", "__");
+        return Registry.FLUID.getId(var1.fluid).toString().replace(":", COLON_REPLACEMENT);
     }
 
     public static FluidProperty create(String var1) {
