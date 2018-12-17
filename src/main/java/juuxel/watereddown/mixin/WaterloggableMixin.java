@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 public interface WaterloggableMixin {
     @Overwrite
     default boolean method_10310(BlockView var1, BlockPos var2, BlockState var3, Fluid var4) {
-        return (!(Boolean)var3.get(WDProperties.LAVALOGGED) && var4 == Fluids.LAVA) ||
+        return (var3.getProperties().contains(WDProperties.LAVALOGGED) && !(Boolean)var3.get(WDProperties.LAVALOGGED) && var4 == Fluids.LAVA) ||
                 (!(Boolean)var3.get(Properties.WATERLOGGED) && var4 == Fluids.WATER);
     }
 
@@ -29,7 +29,7 @@ public interface WaterloggableMixin {
     default boolean method_10311(IWorld var1, BlockPos var2, BlockState var3, FluidState var4) {
         Fluid fluid = var4.getFluid();
 
-        if ((!(Boolean)var3.get(WDProperties.LAVALOGGED) && fluid == Fluids.LAVA) ||
+        if ((var3.getProperties().contains(WDProperties.LAVALOGGED) && !(Boolean)var3.get(WDProperties.LAVALOGGED) && fluid == Fluids.LAVA) ||
                 (!(Boolean)var3.get(Properties.WATERLOGGED) && fluid == Fluids.WATER)) {
             if (!var1.isClient()) {
                 var1.setBlockState(var2, (BlockState)var3.with(fluid == Fluids.LAVA ? WDProperties.LAVALOGGED : Properties.WATERLOGGED, true), 3);
@@ -44,7 +44,7 @@ public interface WaterloggableMixin {
 
     @Overwrite
     default Fluid method_9700(IWorld var1, BlockPos var2, BlockState var3) {
-        if ((Boolean)var3.get(WDProperties.LAVALOGGED)) {
+        if (var3.getProperties().contains(WDProperties.LAVALOGGED) && (Boolean)var3.get(WDProperties.LAVALOGGED)) {
             var1.setBlockState(var2, (BlockState)var3.with(WDProperties.LAVALOGGED, false), 3);
             return Fluids.LAVA;
         } else if ((Boolean)var3.get(Properties.WATERLOGGED)) {
