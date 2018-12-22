@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CauldronBlock;
 import net.minecraft.block.FluidDrainable;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
@@ -39,10 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Implements(@Interface(iface = FluidDrainable.class, prefix = "wd_drainable$"))
 public abstract class CauldronMixin extends BlockMixin implements FluidDrainable {
     @Shadow @Final public static IntegerProperty field_10745;
-    private static final FluidProperty FLUID = new FluidProperty(
-            "fluid",
-            () -> Sets.newHashSet(FluidProperty.WATER, FluidProperty.LAVA, FluidProperty.EMPTY)
-    );
+    private static final FluidProperty FLUID = FluidProperty.VANILLA_FLUIDS;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstruct(Block.Settings var1, CallbackInfo info) {
@@ -145,5 +143,11 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
             info.setReturnValue(15);
             info.cancel();
         }
+    }
+
+    @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
+    private void onEntityCollision(BlockState state, World world_1, BlockPos blockPos_1, Entity entity_1, CallbackInfo info) {
+        if (state.get(FLUID).getFluid() == Fluids.LAVA)
+            info.cancel();
     }
 }

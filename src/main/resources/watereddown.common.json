@@ -6,7 +6,8 @@
     "BlockMixin",
     "CauldronMixin",
     "SandMixin",
-    "BucketMixin"
+    "BucketMixin",
+    "EntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

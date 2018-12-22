@@ -4,6 +4,7 @@
  */
 package juuxel.watereddown.util;
 
+import com.google.common.collect.Sets;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.property.AbstractProperty;
@@ -20,6 +21,10 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
     public static final Wrapper EMPTY = new Wrapper(Fluids.EMPTY);
     public static final Wrapper WATER = new Wrapper(Fluids.WATER);
     public static final Wrapper LAVA = new Wrapper(Fluids.LAVA);
+    public static final FluidProperty VANILLA_FLUIDS = new FluidProperty(
+            "fluid",
+            () -> Sets.newHashSet(FluidProperty.WATER, FluidProperty.LAVA, FluidProperty.EMPTY)
+    );
 
     private final Supplier<Collection<Wrapper>> fluids;
 
