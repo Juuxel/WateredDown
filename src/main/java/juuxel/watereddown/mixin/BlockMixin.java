@@ -25,10 +25,13 @@ public abstract class BlockMixin {
 
     @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-
     }
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     protected void appendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
+    }
+
+    @Inject(at = @At("RETURN"), method = "getLuminance", cancellable = true)
+    protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
     }
 }
