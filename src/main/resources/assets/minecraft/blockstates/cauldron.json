@@ -1,0 +1,14 @@
+{
+    "variants": {
+        "level=0": { "model": "block/cauldron" },
+        "fluid=minecraft__water,level=1": { "model": "block/cauldron_level1" },
+        "fluid=minecraft__water,level=2": { "model": "block/cauldron_level2" },
+        "fluid=minecraft__water,level=3": { "model": "block/cauldron_level3" },
+        "fluid=minecraft__empty,level=1": { "model": "block/cauldron_level1" },
+        "fluid=minecraft__empty,level=2": { "model": "block/cauldron_level2" },
+        "fluid=minecraft__empty,level=3": { "model": "block/cauldron_level3" },
+        "fluid=minecraft__lava,level=1": { "model": "watereddown:block/cauldron_level1_lava" },
+        "fluid=minecraft__lava,level=2": { "model": "watereddown:block/cauldron_level2_lava" },
+        "fluid=minecraft__lava,level=3": { "model": "watereddown:block/cauldron_level3_lava" }
+    }
+}

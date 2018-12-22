@@ -1,0 +1,7 @@
+{
+  "parent": "block/cauldron_level1",
+  "textures": {
+    "water": "block/lava_still"
+  },
+  "ambientocclusion": "true"
+}
