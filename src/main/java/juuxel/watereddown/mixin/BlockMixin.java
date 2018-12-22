@@ -38,8 +38,6 @@ public abstract class BlockMixin {
             return FluidUtils.getWorldState(state.get(WDProperties.FLUID).getFluid());
         else if (stateFactory.getProperties().contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED))
             return Fluids.WATER.getState(false);
-        else if (stateFactory.getProperties().contains(WDProperties.LAVALOGGED) && state.get(WDProperties.LAVALOGGED))
-            return Fluids.LAVA.getState(false);
 
         return Fluids.EMPTY.getDefaultState();
     }

@@ -7,7 +7,6 @@ package juuxel.watereddown.api;
 import net.minecraft.state.property.BooleanProperty;
 
 public final class WDProperties {
-    public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
     public static final FluidProperty FLUID = FluidProperty.create("fluid");
 
     private WDProperties() {}
