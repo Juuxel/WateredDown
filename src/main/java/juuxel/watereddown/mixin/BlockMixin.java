@@ -4,17 +4,11 @@
  */
 package juuxel.watereddown.mixin;
 
-import juuxel.watereddown.api.FluidUtils;
-import juuxel.watereddown.api.WDProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
-import net.minecraft.state.property.Properties;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,23 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Block.class)
 public abstract class BlockMixin {
     @Shadow
-    StateFactory<Block, BlockState> stateFactory;
-
-    @Shadow
     abstract BlockState getDefaultState();
 
     @Shadow
     abstract void setDefaultState(BlockState var1);
-
-    @Overwrite
-    public FluidState getFluidState(BlockState state) {
-        if (stateFactory.getProperties().contains(WDProperties.FLUID))
-            return FluidUtils.getWorldState(state.get(WDProperties.FLUID).getFluid());
-        else if (stateFactory.getProperties().contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED))
-            return Fluids.WATER.getState(false);
-
-        return Fluids.EMPTY.getDefaultState();
-    }
 
     @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {

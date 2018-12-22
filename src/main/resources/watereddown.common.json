@@ -3,36 +3,11 @@
   "package": "juuxel.watereddown.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AnvilMixin",
     "BlockMixin",
-    "BrewingStandMixin",
-    "BellMixin",
-    "GrindstoneMixin",
-    "DaylightDetectorMixin",
-    "LecternMixin",
-    "StonecutterMixin",
-    "HopperMixin",
-    "CactusMixin",
-    "LanternMixin",
     "CauldronMixin",
-    "WallMountedBlockMixin",
-    "AbstractRailMixin",
-    "RailMixin",
-    "PoweredRailMixin",
-    "DetectorRailMixin",
-    "BannerMixin",
-    "DoorMixin",
-    "BedMixin",
-    "BlocksMixin",
-    "SandMixin",
-    "PistonMixin",
-    "PistonHeadMixin",
-    "SkullMixin"
+    "SandMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "__disabled": [
-    "EnchantingTableMixin"
-  ]
+  }
 }
