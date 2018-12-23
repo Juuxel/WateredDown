@@ -4,9 +4,8 @@
  */
 package juuxel.watereddown.mixin;
 
-import com.google.common.collect.Sets;
+import juuxel.watereddown.api.FluidProperty;
 import juuxel.watereddown.util.FluidAccessor;
-import juuxel.watereddown.util.FluidProperty;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CauldronBlock;

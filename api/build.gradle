@@ -1,11 +1,12 @@
 plugins {
-    id 'fabric-loom' version '0.1.0-SNAPSHOT'
+    id 'fabric-loom'
 }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "WateredDown"
+archivesBaseName = "WateredDown-api"
 version = "0.3.0"
 
 minecraft {
@@ -18,6 +19,4 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile "net.fabricmc:fabric:0.1.2.63"
-    modCompile project(':api')
-    compileOnly project(':api')
 }

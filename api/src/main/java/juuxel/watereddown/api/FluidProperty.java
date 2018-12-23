@@ -2,7 +2,7 @@
  * by Juuxel, licensed under the MIT license.
  * Full code and license: https://github.com/Juuxel/WateredDown
  */
-package juuxel.watereddown.util;
+package juuxel.watereddown.api;
 
 import com.google.common.collect.Sets;
 import net.minecraft.fluid.Fluid;
