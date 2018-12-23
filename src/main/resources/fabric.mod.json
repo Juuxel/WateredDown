@@ -2,7 +2,7 @@
   "id": "watereddown",
   "name": "Watered Down",
   "description": "Adds waterlogging to many blocks.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "side": "universal",
   "initializer": "juuxel.watereddown.WateredDown",
   "requires": {
@@ -11,5 +11,8 @@
   "mixins": {
     "client": "watereddown.client.json",
     "common": "watereddown.common.json"
+  },
+  "__mixins": {
+    "common": "watereddown.common.mini.json"
   }
 }

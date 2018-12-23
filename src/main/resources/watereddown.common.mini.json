@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "juuxel.watereddown.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlockMixin",
+    "CauldronMixin",
+    "SandMixin",
+    "BucketMixin",
+    "EntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

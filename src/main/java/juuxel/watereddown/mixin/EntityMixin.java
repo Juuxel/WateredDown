@@ -4,7 +4,7 @@
  */
 package juuxel.watereddown.mixin;
 
-import juuxel.watereddown.util.FluidProperty;
+import juuxel.watereddown.api.FluidProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CauldronBlock;
 import net.minecraft.entity.Entity;

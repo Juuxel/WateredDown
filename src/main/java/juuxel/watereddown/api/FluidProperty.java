@@ -9,6 +9,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Collection;
@@ -18,13 +19,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper> {
-    public static final Wrapper EMPTY = new Wrapper(Fluids.EMPTY);
-    public static final Wrapper WATER = new Wrapper(Fluids.WATER);
-    public static final Wrapper LAVA = new Wrapper(Fluids.LAVA);
+    public static final Wrapper EMPTY = new Wrapper(() -> Fluids.EMPTY);
+    public static final Wrapper WATER = new Wrapper(() -> Fluids.WATER);
+    public static final Wrapper LAVA = new Wrapper(() -> Fluids.LAVA);
     public static final FluidProperty VANILLA_FLUIDS = new FluidProperty(
             "fluid",
             () -> Sets.newHashSet(FluidProperty.WATER, FluidProperty.LAVA, FluidProperty.EMPTY)
     );
+    public static final FluidProperty FLUID = new FluidProperty("fluid");
 
     private final Supplier<Collection<Wrapper>> fluids;
 
@@ -51,7 +53,9 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
             String path = var1.substring(underscore + 1 + namespaceLength);
             Identifier id = new Identifier(namespace, path);
             if (Registry.FLUID.contains(id)) {
-                return Optional.of(new Wrapper(Registry.FLUID.get(id)));
+                Wrapper fluid = new Wrapper(Registry.FLUID.get(id));
+                if (getValues().contains(fluid))
+                    return Optional.of(fluid);
             }
         } catch (Exception e) {}
 
@@ -60,24 +64,26 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
 
     @Override
     public String getValueAsString(Wrapper var1) {
-        Identifier id = Registry.FLUID.getId(var1.fluid);
+        Identifier id = Registry.FLUID.getId(var1.get());
         return String.format("%d_%s%s", id.getNamespace().length(), id.getNamespace(), id.getPath());
     }
 
-    public static final class Wrapper implements Comparable<Wrapper> {
-        private final Fluid fluid;
-
+    public static final class Wrapper extends Lazy<Fluid> implements Comparable<Wrapper> {
         public Wrapper(Fluid fluid) {
-            this.fluid = fluid;
+            this(() -> fluid);
+        }
+
+        public Wrapper(Supplier<Fluid> fluid) {
+            super(fluid);
         }
 
         public Fluid getFluid() {
-            return fluid;
+            return get();
         }
 
         @Override
         public int compareTo(Wrapper o) {
-            return Integer.compare(getId(fluid), getId(o.fluid));
+            return Integer.compare(getId(get()), getId(o.get()));
         }
 
         private int getId(Fluid fluid) {
@@ -86,17 +92,17 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(fluid);
+            return Objects.hashCode(get());
         }
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof Wrapper && Objects.equals(((Wrapper) obj).fluid, fluid);
+            return obj instanceof Wrapper && Objects.equals(((Wrapper) obj).get(), get());
         }
 
         @Override
         public String toString() {
-            return Registry.FLUID.getId(fluid).toString();
+            return Registry.FLUID.getId(get()).toString();
         }
     }
 }
