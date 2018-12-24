@@ -28,7 +28,8 @@
     "PistonMixin",
     "PistonHeadMixin",
     "SkullMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "ToweletteMixin"
   ],
   "injectors": {
     "defaultRequire": 1

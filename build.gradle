@@ -24,10 +24,10 @@ dependencies {
 
 // TODO Fix
 task apiJar(type: Jar) {
-    classifier = 'juuxel.watereddown.api'
+    classifier = 'api'
 
     from(sourceSets.main.output) {
-        include "juuxel/watereddown/juuxel.watereddown.api/**"
+        include "juuxel/watereddown/api/**"
     }
 }
 

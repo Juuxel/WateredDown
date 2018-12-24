@@ -11,8 +11,5 @@
   "mixins": {
     "client": "watereddown.client.json",
     "common": "watereddown.common.json"
-  },
-  "__mixins": {
-    "common": "watereddown.common.mini.json"
   }
 }
