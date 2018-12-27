@@ -68,6 +68,11 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
         return String.format("%d_%s%s", id.getNamespace().length(), id.getNamespace(), id.getPath());
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return this == other;
+    }
+
     public static final class Wrapper extends Lazy<Fluid> implements Comparable<Wrapper> {
         public Wrapper(Fluid fluid) {
             this(() -> fluid);
