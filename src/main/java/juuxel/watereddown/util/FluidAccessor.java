@@ -7,5 +7,5 @@ package juuxel.watereddown.util;
 import net.minecraft.fluid.Fluid;
 
 public interface FluidAccessor {
-    Fluid getFluid();
+    Fluid wd_getFluid();
 }

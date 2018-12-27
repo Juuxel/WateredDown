@@ -97,14 +97,14 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         ItemStack stack = var4.getStackInHand(var5);
         int var11 = var1.get(field_10745);
         Item item = stack.getItem();
-        if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).getFluid() != Fluids.EMPTY) {
+        if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).wd_getFluid() != Fluids.EMPTY) {
             if (var11 < 3 && !var2.isClient) {
                 if (!var4.abilities.creativeMode) {
                     var4.setStackInHand(var5, new ItemStack(Items.BUCKET));
                 }
 
                 var4.increaseStat(Stats.FILL_CAULDRON);
-                placeFluid(var2, var3, var1, 3, new FluidProperty.Wrapper(((FluidAccessor) item).getFluid()));
+                placeFluid(var2, var3, var1, 3, new FluidProperty.Wrapper(((FluidAccessor) item).wd_getFluid()));
                 var2.playSound(null, var3, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCK, 1.0F, 1.0F);
             }
 

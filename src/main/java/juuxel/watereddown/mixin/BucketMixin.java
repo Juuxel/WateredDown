@@ -19,7 +19,7 @@ public class BucketMixin implements FluidAccessor {
     private Fluid fluid;
 
     @Override
-    public Fluid getFluid() {
+    public Fluid wd_getFluid() {
         return fluid;
     }
 }
