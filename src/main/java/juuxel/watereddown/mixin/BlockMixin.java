@@ -9,19 +9,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
-import net.minecraft.state.property.Properties;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = Block.class, priority = 999)
+// 1001 to skip Towelette's overwrite
+// Virtuoel, if you're reading this, you should not overwrite that >:(
+@Mixin(value = Block.class, priority = 1001)
 public abstract class BlockMixin {
     @Shadow
     StateFactory<Block, BlockState> stateFactory;
@@ -44,13 +43,12 @@ public abstract class BlockMixin {
     protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
     }
 
-    @Overwrite
-    public FluidState getFluidState(BlockState state) {
-        if (stateFactory.getProperties().contains(FluidProperty.FLUID) && state.get(FluidProperty.FLUID).getFluid() instanceof BaseFluid)
-            return ((BaseFluid) state.get(FluidProperty.FLUID).getFluid()).getState(false);
-        else if (stateFactory.getProperties().contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED))
-            return Fluids.WATER.getState(false);
-
-        return Fluids.EMPTY.getDefaultState();
+    @Inject(method = "getFluidState", at = @At("HEAD"))
+    private void getFluidState(BlockState state, CallbackInfoReturnable<FluidState> info) {
+        if (stateFactory.getProperties().contains(FluidProperty.FLUID) &&
+                state.get(FluidProperty.FLUID).getFluid() instanceof BaseFluid) {
+            info.setReturnValue(((BaseFluid) state.get(FluidProperty.FLUID).getFluid()).getState(false));
+            info.cancel();
+        }
     }
 }
