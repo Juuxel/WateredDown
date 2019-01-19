@@ -2,7 +2,7 @@
   "id": "watereddown",
   "name": "Watered Down",
   "description": "Adds waterlogging to many blocks.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "side": "universal",
   "initializer": "juuxel.watereddown.WateredDown",
   "requires": {

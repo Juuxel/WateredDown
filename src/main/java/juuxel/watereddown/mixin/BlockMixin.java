@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // 1001 to skip Towelette's overwrite
 // Virtuoel, if you're reading this, you should not overwrite that >:(
+// TODO: Check if that actually works
 @Mixin(value = Block.class, priority = 1001)
 public abstract class BlockMixin {
     @Shadow
