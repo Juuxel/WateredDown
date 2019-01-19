@@ -8,7 +8,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "WateredDown"
-version = "0.3.0"
+version = "0.3.1"
 
 minecraft {
 }
