@@ -29,7 +29,10 @@
     "PistonHeadMixin",
     "SkullMixin",
     "EntityMixin",
-    "EndRodMixin"
+    "EndRodMixin",
+    "BucketMixin",
+    "FluidMixin",
+    "LavaFluidMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -43,7 +43,7 @@ public abstract class BlockMixin {
     protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
     }
 
-    @Inject(method = "getFluidState", at = @At("HEAD"))
+    @Inject(method = "getFluidState", at = @At("HEAD"), cancellable = true)
     private void getFluidState(BlockState state, CallbackInfoReturnable<FluidState> info) {
         if (stateFactory.getProperties().contains(FluidProperty.FLUID) &&
                 state.get(FluidProperty.FLUID).getFluid() instanceof BaseFluid) {

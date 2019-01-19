@@ -5,11 +5,9 @@
 package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
+import juuxel.watereddown.api.WDFluid;
 import juuxel.watereddown.util.FluidAccessor;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CauldronBlock;
-import net.minecraft.block.FluidDrainable;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.BaseFluid;
@@ -23,10 +21,12 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.BlockHitResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
@@ -68,7 +68,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     }
 
     @Inject(at = @At("HEAD"), method = "activate", cancellable = true)
-    private void onActivateHead(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction var6, float var7, float var8, float var9, CallbackInfoReturnable<Boolean> info) {
+    private void onActivateHead(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult var6, CallbackInfoReturnable<Boolean> info) {
         ItemStack stack = player.getStackInHand(hand);
 
         // Skip the vanilla bucket code
@@ -93,19 +93,19 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     }
 
     @Inject(at = @At("RETURN"), method = "activate", cancellable = true)
-    private void onActivateReturn(BlockState var1, World var2, BlockPos var3, PlayerEntity var4, Hand var5, Direction var6, float var7, float var8, float var9, CallbackInfoReturnable<Boolean> info) {
-        ItemStack stack = var4.getStackInHand(var5);
-        int var11 = var1.get(field_10745);
+    private void onActivateReturn(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult var6, CallbackInfoReturnable<Boolean> info) {
+        ItemStack stack = player.getStackInHand(hand);
+        int var11 = state.get(field_10745);
         Item item = stack.getItem();
         if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).wd_getFluid() != Fluids.EMPTY) {
-            if (var11 < 3 && !var2.isClient) {
-                if (!var4.abilities.creativeMode) {
-                    var4.setStackInHand(var5, new ItemStack(Items.BUCKET));
+            if (var11 < 3 && !world.isClient) {
+                if (!player.abilities.creativeMode) {
+                    player.setStackInHand(hand, new ItemStack(Items.BUCKET));
                 }
 
-                var4.increaseStat(Stats.FILL_CAULDRON);
-                placeFluid(var2, var3, var1, 3, new FluidProperty.Wrapper(((FluidAccessor) item).wd_getFluid()));
-                var2.playSound(null, var3, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCK, 1.0F, 1.0F);
+                player.increaseStat(Stats.FILL_CAULDRON);
+                placeFluid(world, pos, state, 3, new FluidProperty.Wrapper(((FluidAccessor) item).wd_getFluid()));
+                world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCK, 1.0F, 1.0F);
             }
 
             info.setReturnValue(true);
@@ -138,10 +138,8 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
     @Override
     protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
-        if (state.get(FLUID).getFluid() == Fluids.LAVA) {
-            info.setReturnValue(15);
-            info.cancel();
-        }
+        info.setReturnValue(((WDFluid) state.get(FLUID).getFluid()).getLuminance());
+        info.cancel();
     }
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
