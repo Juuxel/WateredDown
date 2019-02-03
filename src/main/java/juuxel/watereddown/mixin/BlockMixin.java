@@ -52,8 +52,8 @@ public abstract class BlockMixin {
     @Inject(method = "getFluidState", at = @At("HEAD"), cancellable = true)
     private void getFluidState(BlockState state, CallbackInfoReturnable<FluidState> info) {
         if (this instanceof Fluidloggable &&
-            state.get(FluidProperty.FLUID).unwrap() instanceof BaseFluid) {
-            info.setReturnValue(((BaseFluid) state.get(FluidProperty.FLUID).unwrap()).getState(false));
+            state.get(FluidProperty.FLUID).getFluid() instanceof BaseFluid) {
+            info.setReturnValue(((BaseFluid) state.get(FluidProperty.FLUID).getFluid()).getState(false));
             info.cancel();
         }
     }

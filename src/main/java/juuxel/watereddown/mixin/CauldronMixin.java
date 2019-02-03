@@ -85,7 +85,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
         // Item destruction with lava
         // Must be on HEAD, otherwise item cleaning etc is done and lava turns into water
-        int lavaLevel = state.get(FLUID).unwrap().matches(FluidTags.LAVA) ? state.get(LEVEL) : 0;
+        int lavaLevel = state.get(FLUID).getFluid().matches(FluidTags.LAVA) ? state.get(LEVEL) : 0;
 
         if (lavaLevel == 0 || stack.getItem() instanceof BucketItem)
             return;
@@ -120,8 +120,8 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     }
 
     private boolean canPlaceFluid(BlockState state, FluidProperty.Wrapper fluid) {
-        Fluid blockFluid = state.get(FLUID).unwrap();
-        Fluid bucketFluid = fluid.unwrap();
+        Fluid blockFluid = state.get(FLUID).getFluid();
+        Fluid bucketFluid = fluid.getFluid();
 
         return blockFluid.matchesType(bucketFluid) || blockFluid == Fluids.EMPTY;
     }
@@ -139,7 +139,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     @Override
     public Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
         int level = state.get(LEVEL);
-        Fluid fluid = state.get(FLUID).unwrap();
+        Fluid fluid = state.get(FLUID).getFluid();
 
         if (level == 3) {
             world.setBlockState(pos, state.with(LEVEL, 0), 3);
@@ -158,7 +158,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     private void onEntityCollision(BlockState state, World world_1, BlockPos blockPos_1, Entity entity_1, CallbackInfo info) {
-        if (state.get(FLUID).unwrap() == Fluids.LAVA)
+        if (state.get(FLUID).getFluid() == Fluids.LAVA)
             info.cancel();
     }
 }

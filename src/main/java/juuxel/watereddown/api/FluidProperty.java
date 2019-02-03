@@ -98,7 +98,7 @@ public final class FluidProperty extends AbstractProperty<FluidProperty.Wrapper>
             super(fluid);
         }
 
-        public Fluid unwrap() {
+        public Fluid getFluid() {
             return get();
         }
 
