@@ -23,7 +23,6 @@
     "BannerMixin",
     "DoorMixin",
     "BedMixin",
-    "BlocksMixin",
     "SandMixin",
     "PistonMixin",
     "PistonHeadMixin",
@@ -33,8 +32,7 @@
     "BucketMixin",
     "FluidMixin",
     "LavaFluidMixin",
-    "EnchantingTableMixin",
-    "ItemsMixin"
+    "EnchantingTableMixin"
   ],
   "injectors": {
     "defaultRequire": 1
