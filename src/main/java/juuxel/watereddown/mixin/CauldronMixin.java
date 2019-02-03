@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -60,10 +61,15 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         var1.with(FLUID);
     }
 
-    // TODO Replace with a ModifyArg or something
-    @Overwrite
-    public void setLevel(World var1, BlockPos var2, BlockState var3, int var4) {
-        placeFluid(var1, var2, var3, var4, FluidProperty.WATER);
+    @Inject(method = "setLevel", at = @At("HEAD"), cancellable = true)
+    private void setLevel(World world, BlockPos pos, BlockState state, int level, CallbackInfo info) {
+        if (!canPlaceFluid(state, FluidProperty.WATER))
+            info.cancel();
+    }
+
+    @ModifyArg(method = "setLevel", index = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    private BlockState setWaterLevel(BlockState state) {
+        return state.with(FLUID, FluidProperty.WATER);
     }
 
     @Inject(at = @At("HEAD"), method = "activate", cancellable = true)
@@ -78,7 +84,8 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         }
 
         // Item destruction with lava
-        int lavaLevel = state.get(FLUID).getFluid().matches(FluidTags.LAVA) ? state.get(LEVEL) : 0;
+        // Must be on HEAD, otherwise item cleaning etc is done and lava turns into water
+        int lavaLevel = state.get(FLUID).unwrap().matches(FluidTags.LAVA) ? state.get(LEVEL) : 0;
 
         if (lavaLevel == 0 || stack.getItem() instanceof BucketItem)
             return;
@@ -96,7 +103,8 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         ItemStack stack = player.getStackInHand(hand);
         int var11 = state.get(LEVEL);
         Item item = stack.getItem();
-        if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).wd_getFluid() != Fluids.EMPTY) {
+        if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).wd_getFluid() != Fluids.EMPTY &&
+            canPlaceFluid(state, new FluidProperty.Wrapper(((FluidAccessor) item).wd_getFluid()))) {
             if (var11 < 3 && !world.isClient) {
                 if (!player.abilities.creativeMode) {
                     player.setStackInHand(hand, new ItemStack(Items.BUCKET));
@@ -109,6 +117,13 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
             info.setReturnValue(true);
         }
+    }
+
+    private boolean canPlaceFluid(BlockState state, FluidProperty.Wrapper fluid) {
+        Fluid blockFluid = state.get(FLUID).unwrap();
+        Fluid bucketFluid = fluid.unwrap();
+
+        return blockFluid.matchesType(bucketFluid) || blockFluid == Fluids.EMPTY;
     }
 
     private void placeFluid(World var1, BlockPos var2, BlockState var3, int var4, FluidProperty.Wrapper fluid) {
@@ -124,7 +139,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     @Override
     public Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
         int level = state.get(LEVEL);
-        Fluid fluid = state.get(FLUID).getFluid();
+        Fluid fluid = state.get(FLUID).unwrap();
 
         if (level == 3) {
             world.setBlockState(pos, state.with(LEVEL, 0), 3);
@@ -143,7 +158,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     private void onEntityCollision(BlockState state, World world_1, BlockPos blockPos_1, Entity entity_1, CallbackInfo info) {
-        if (state.get(FLUID).getFluid() == Fluids.LAVA)
+        if (state.get(FLUID).unwrap() == Fluids.LAVA)
             info.cancel();
     }
 }

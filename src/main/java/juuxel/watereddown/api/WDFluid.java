@@ -23,6 +23,6 @@ public interface WDFluid {
     }
 
     static WDFluid of(FluidProperty.Wrapper fluidWrapper) {
-        return (WDFluid) fluidWrapper.getFluid();
+        return (WDFluid) fluidWrapper.unwrap();
     }
 }

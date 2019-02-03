@@ -8,22 +8,22 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "WateredDown"
-version = "0.3.1"
+version = "0.3.2+19w05a"
 
 minecraft {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w04b"
-    mappings "net.fabricmc:yarn:19w04b.2"
+    minecraft "com.mojang:minecraft:19w05a"
+    mappings "net.fabricmc:yarn:19w05a.6"
     modCompile "net.fabricmc:fabric-loader:0.3.3.99"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile "net.fabricmc:fabric:0.1.5.83"
+    modCompile "net.fabricmc:fabric:0.1.5.88"
 }
 
-// TODO Fix
 task apiJar(type: Jar) {
+    group = "build"
     classifier = 'api'
 
     from(sourceSets.main.output) {
@@ -32,7 +32,8 @@ task apiJar(type: Jar) {
 }
 
 task remapApiJar(type: RemapJar) {
-    jar = apiJar.outputs.files.find()
+    group = "build"
+    jar = apiJar.archivePath
 }
 
 tasks.remapApiJar.dependsOn(tasks.apiJar)

@@ -5,6 +5,8 @@
 package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
+import juuxel.watereddown.api.Fluidloggable;
+import juuxel.watereddown.api.WDFluid;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.BaseFluid;
@@ -42,13 +44,16 @@ public abstract class BlockMixin {
 
     @Inject(at = @At("RETURN"), method = "getLuminance", cancellable = true)
     protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
+        if (this instanceof Fluidloggable) {
+            info.setReturnValue(Math.max(info.getReturnValue(), WDFluid.of(state.getFluidState().getFluid()).getLuminance()));
+        }
     }
 
     @Inject(method = "getFluidState", at = @At("HEAD"), cancellable = true)
     private void getFluidState(BlockState state, CallbackInfoReturnable<FluidState> info) {
-        if (stateFactory.getProperties().contains(FluidProperty.FLUID) &&
-                state.get(FluidProperty.FLUID).getFluid() instanceof BaseFluid) {
-            info.setReturnValue(((BaseFluid) state.get(FluidProperty.FLUID).getFluid()).getState(false));
+        if (this instanceof Fluidloggable &&
+            state.get(FluidProperty.FLUID).unwrap() instanceof BaseFluid) {
+            info.setReturnValue(((BaseFluid) state.get(FluidProperty.FLUID).unwrap()).getState(false));
             info.cancel();
         }
     }

@@ -28,13 +28,13 @@ public abstract class StonecutterMixin extends BlockMixin {
         setDefaultState(getDefaultState().with(FluidProperty.FLUID, FluidProperty.EMPTY));
     }
 
-    @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
+    @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
+    private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
         Fluidloggable.onAppendProperties(var1);
     }
 
-    @Override
-    protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
+    @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
+    private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
         FluidloggableImpl.onGetPlacementState(context, info);
     }
 }
