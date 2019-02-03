@@ -33,7 +33,8 @@
     "BucketMixin",
     "FluidMixin",
     "LavaFluidMixin",
-    "EnchantingTableMixin"
+    "EnchantingTableMixin",
+    "ItemsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
