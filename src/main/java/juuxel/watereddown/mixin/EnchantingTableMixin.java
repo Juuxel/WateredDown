@@ -6,11 +6,12 @@ package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
 import juuxel.watereddown.api.Fluidloggable;
+import juuxel.watereddown.api.WDFluid;
+import juuxel.watereddown.util.FluidloggableImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EnchantingTableBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
@@ -18,8 +19,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateFactory;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
@@ -39,21 +40,20 @@ public abstract class EnchantingTableMixin extends BlockMixin {
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(FluidProperty.FLUID);
+        Fluidloggable.onAppendProperties(var1);
     }
 
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        FluidState state = context.getWorld().getFluidState(context.getPos());
-        info.setReturnValue(info.getReturnValue().with(FluidProperty.FLUID, new FluidProperty.Wrapper(state.getFluid())));
+        FluidloggableImpl.onGetPlacementState(context, info);
     }
 
     @Inject(at = @At("HEAD"), method = "activate", cancellable = true)
-    private void onActivate(BlockState var1, World world, BlockPos pos, PlayerEntity player, Hand var5, Direction var6, float var7, float var8, float var9, CallbackInfoReturnable<Boolean> info) {
-        if (var1.get(FluidProperty.FLUID).getFluid().matches(FluidTags.LAVA)) {
-            double x = pos.getX() + 0.5;
+    private void onActivate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<Boolean> info) {
+        if (WDFluid.of(state.get(FluidProperty.FLUID)).blocksEnchantingTables()) {
+            double x = pos.getX() + 0.25 + world.getRandom().nextDouble() * 0.5;
             double y = pos.getY() + 0.9;
-            double z = pos.getZ() + 0.5;
+            double z = pos.getZ() + 0.25 + world.getRandom().nextDouble() * 0.5;
 
             for (int i = 0; i < 3; i++) {
                 world.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0.0, 0.0, 0.0);

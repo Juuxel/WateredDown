@@ -4,12 +4,15 @@
  */
 package juuxel.watereddown.api;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateFactory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
@@ -24,7 +27,7 @@ public interface Fluidloggable extends FluidDrainable, FluidFillable {
         if (var3.get(FluidProperty.FLUID).getFluid() == Fluids.EMPTY) {
             if (!var1.isClient()) {
                 var1.setBlockState(var2, var3.with(FluidProperty.FLUID, new FluidProperty.Wrapper(var4.getFluid())), 3);
-                var1.getFluidTickScheduler().schedule(var2, var4.getFluid(), var4.getFluid().method_15789(var1));
+                var1.getFluidTickScheduler().schedule(var2, var4.getFluid(), var4.getFluid().getTickRate(var1));
             }
             return true;
         } else {
@@ -39,5 +42,18 @@ public interface Fluidloggable extends FluidDrainable, FluidFillable {
         } else {
             return Fluids.EMPTY;
         }
+    }
+
+    static void onAppendProperties(StateFactory.Builder<Block, BlockState> builder) {
+        builder.with(FluidProperty.FLUID);
+    }
+
+    static BlockState onGetPlacementState(ItemPlacementContext context, BlockState state) {
+        try {
+            FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
+            return state.with(FluidProperty.FLUID, new FluidProperty.Wrapper(fluidState.getFluid()));
+        } catch (NullPointerException e) {}
+
+        return state;
     }
 }

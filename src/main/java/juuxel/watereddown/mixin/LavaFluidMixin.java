@@ -13,4 +13,9 @@ public class LavaFluidMixin extends FluidMixin {
     public int getLuminance() {
         return 15;
     }
+
+    @Override
+    public boolean blocksEnchantingTables() {
+        return true;
+    }
 }

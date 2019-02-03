@@ -6,10 +6,10 @@ package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
 import juuxel.watereddown.api.Fluidloggable;
+import juuxel.watereddown.util.FluidloggableImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonHeadBlock;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import org.spongepowered.asm.mixin.Implements;
@@ -30,12 +30,11 @@ public abstract class PistonHeadMixin extends BlockMixin {
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(FluidProperty.FLUID);
+        Fluidloggable.onAppendProperties(var1);
     }
 
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        FluidState state = context.getWorld().getFluidState(context.getPos());
-        info.setReturnValue(info.getReturnValue().with(FluidProperty.FLUID, new FluidProperty.Wrapper(state.getFluid())));
+        FluidloggableImpl.onGetPlacementState(context, info);
     }
 }

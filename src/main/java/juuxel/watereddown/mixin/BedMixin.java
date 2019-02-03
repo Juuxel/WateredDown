@@ -6,10 +6,10 @@ package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
 import juuxel.watereddown.api.Fluidloggable;
+import juuxel.watereddown.util.FluidloggableImpl;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.util.DyeColor;
@@ -31,14 +31,11 @@ public abstract class BedMixin extends BlockMixin {
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(FluidProperty.FLUID);
+        Fluidloggable.onAppendProperties(var1);
     }
 
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        try {
-            FluidState state = context.getWorld().getFluidState(context.getPos());
-            info.setReturnValue(info.getReturnValue().with(FluidProperty.FLUID, new FluidProperty.Wrapper(state.getFluid())));
-        } catch (NullPointerException e) {}
+        FluidloggableImpl.onGetPlacementState(context, info);
     }
 }

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "juuxel.watereddown.mixin",
+  "package": "juuxel.watereddown.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],

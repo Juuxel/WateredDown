@@ -21,12 +21,10 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.BlockHitResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
@@ -38,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CauldronBlock.class)
 @Implements(@Interface(iface = FluidDrainable.class, prefix = "wd_drainable$"))
 public abstract class CauldronMixin extends BlockMixin implements FluidDrainable {
-    @Shadow @Final public static IntegerProperty field_10745;
+    @Shadow @Final public static IntegerProperty LEVEL;
     private static final FluidProperty FLUID = FluidProperty.VANILLA_FLUIDS;
 
     @Inject(at = @At("RETURN"), method = "<init>")
@@ -48,12 +46,12 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        FluidState state = context.getWorld().getFluidState(context.getPos());
+        FluidState state = context.getWorld().getFluidState(context.getBlockPos());
 
         if (state.getFluid() instanceof BaseFluid) {
             BaseFluid baseFluid = (BaseFluid) state.getFluid();
             Fluid still = baseFluid.getStill();
-            info.setReturnValue(info.getReturnValue().with(field_10745, 3).with(FLUID, new FluidProperty.Wrapper(still)));
+            info.setReturnValue(info.getReturnValue().with(LEVEL, 3).with(FLUID, new FluidProperty.Wrapper(still)));
         }
     }
 
@@ -62,8 +60,9 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         var1.with(FLUID);
     }
 
+    // TODO Replace with a ModifyArg or something
     @Overwrite
-    public void method_9726(World var1, BlockPos var2, BlockState var3, int var4) {
+    public void setLevel(World var1, BlockPos var2, BlockState var3, int var4) {
         placeFluid(var1, var2, var3, var4, FluidProperty.WATER);
     }
 
@@ -79,14 +78,14 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
         }
 
         // Item destruction with lava
-        int lavaLevel = state.get(FLUID).getFluid().matches(FluidTags.LAVA) ? state.get(field_10745) : 0;
+        int lavaLevel = state.get(FLUID).getFluid().matches(FluidTags.LAVA) ? state.get(LEVEL) : 0;
 
         if (lavaLevel == 0 || stack.getItem() instanceof BucketItem)
             return;
 
         stack.subtractAmount(1);
         world.playSound(player, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCK, 1f, 1f);
-        world.setBlockState(pos, state.with(field_10745, lavaLevel - 1));
+        world.setBlockState(pos, state.with(LEVEL, lavaLevel - 1));
         setFluidFromLevel(world, pos);
         info.setReturnValue(true);
         info.cancel();
@@ -95,7 +94,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     @Inject(at = @At("RETURN"), method = "activate", cancellable = true)
     private void onActivateReturn(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult var6, CallbackInfoReturnable<Boolean> info) {
         ItemStack stack = player.getStackInHand(hand);
-        int var11 = state.get(field_10745);
+        int var11 = state.get(LEVEL);
         Item item = stack.getItem();
         if (!info.getReturnValue() && item instanceof BucketItem && ((FluidAccessor) item).wd_getFluid() != Fluids.EMPTY) {
             if (var11 < 3 && !world.isClient) {
@@ -113,22 +112,22 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
     }
 
     private void placeFluid(World var1, BlockPos var2, BlockState var3, int var4, FluidProperty.Wrapper fluid) {
-        var1.setBlockState(var2, var3.with(field_10745, MathHelper.clamp(var4, 0, 3)).with(FLUID, fluid), 2);
+        var1.setBlockState(var2, var3.with(LEVEL, MathHelper.clamp(var4, 0, 3)).with(FLUID, fluid), 2);
         var1.updateHorizontalAdjacent(var2, (Block) (Object) this);
     }
 
     private void setFluidFromLevel(IWorld world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, state.with(FLUID, state.get(field_10745) == 0 ? FluidProperty.EMPTY : state.get(FLUID)), 3);
+        world.setBlockState(pos, state.with(FLUID, state.get(LEVEL) == 0 ? FluidProperty.EMPTY : state.get(FLUID)), 3);
     }
 
     @Override
     public Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
-        int level = state.get(field_10745);
+        int level = state.get(LEVEL);
         Fluid fluid = state.get(FLUID).getFluid();
 
         if (level == 3) {
-            world.setBlockState(pos, state.with(field_10745, 0), 3);
+            world.setBlockState(pos, state.with(LEVEL, 0), 3);
             setFluidFromLevel(world, pos);
             return fluid;
         }
@@ -138,7 +137,7 @@ public abstract class CauldronMixin extends BlockMixin implements FluidDrainable
 
     @Override
     protected void getLuminance(BlockState state, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(((WDFluid) state.get(FLUID).getFluid()).getLuminance());
+        info.setReturnValue(WDFluid.of(state.get(FLUID)).getLuminance());
         info.cancel();
     }
 

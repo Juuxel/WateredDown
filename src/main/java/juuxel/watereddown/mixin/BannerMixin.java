@@ -6,11 +6,11 @@ package juuxel.watereddown.mixin;
 
 import juuxel.watereddown.api.FluidProperty;
 import juuxel.watereddown.api.Fluidloggable;
+import juuxel.watereddown.util.FluidloggableImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StandingBannerBlock;
 import net.minecraft.block.WallBannerBlock;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.util.DyeColor;
@@ -32,14 +32,11 @@ public abstract class BannerMixin extends BlockMixin {
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(FluidProperty.FLUID);
+        Fluidloggable.onAppendProperties(var1);
     }
 
     @Inject(at = @At("RETURN"), method = "getPlacementState", cancellable = true)
     private void replacePlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
-        try {
-            FluidState state = context.getWorld().getFluidState(context.getPos());
-            info.setReturnValue(info.getReturnValue().with(FluidProperty.FLUID, new FluidProperty.Wrapper(state.getFluid())));
-        } catch (NullPointerException e) {}
+        FluidloggableImpl.onGetPlacementState(context, info);
     }
 }

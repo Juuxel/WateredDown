@@ -4,7 +4,10 @@
  */
 package juuxel.watereddown.mixin;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SandBlock;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
@@ -19,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SandBlock.class)
-@Implements(@Interface(iface = Waterloggable.class, prefix = "waterlog$"))
+@Implements(@Interface(iface = Waterloggable.class, prefix = "watereddown$"))
 public abstract class SandMixin extends BlockMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstruct(int var1, Block.Settings var2, CallbackInfo info) {
@@ -34,7 +37,7 @@ public abstract class SandMixin extends BlockMixin {
     @Override
     protected void getPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> info) {
         try {
-            FluidState state = context.getWorld().getFluidState(context.getPos());
+            FluidState state = context.getWorld().getFluidState(context.getBlockPos());
             info.setReturnValue(info.getReturnValue().with(Properties.WATERLOGGED, state.matches(FluidTags.WATER)));
         } catch (NullPointerException e) {}
     }

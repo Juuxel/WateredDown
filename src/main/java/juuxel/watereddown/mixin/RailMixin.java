@@ -27,6 +27,6 @@ public abstract class RailMixin extends AbstractRailMixin {
 
     @Inject(at = @At("RETURN"), method = "appendProperties", cancellable = true)
     private void onAppendProperties(StateFactory.Builder<Block, BlockState> var1, CallbackInfo info) {
-        var1.with(FluidProperty.FLUID);
+        Fluidloggable.onAppendProperties(var1);
     }
 }

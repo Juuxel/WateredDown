@@ -4,11 +4,25 @@
  */
 package juuxel.watereddown.api;
 
+import net.minecraft.fluid.Fluid;
+
 /**
  * Watered Down's extensions to Fluid. Implemented by all fluids.
  */
 public interface WDFluid {
     default int getLuminance() {
         return 0;
+    }
+
+    default boolean blocksEnchantingTables() {
+        return false;
+    }
+
+    static WDFluid of(Fluid fluid) {
+        return (WDFluid) fluid;
+    }
+
+    static WDFluid of(FluidProperty.Wrapper fluidWrapper) {
+        return (WDFluid) fluidWrapper.getFluid();
     }
 }

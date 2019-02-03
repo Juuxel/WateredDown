@@ -31,8 +31,12 @@ public abstract class EntityMixin {
     private void isTouchingLava(CallbackInfoReturnable<Boolean> info) {
         if (!info.getReturnValue()) {
             BlockState state = world.getBlockState(getPos());
-            info.setReturnValue(state.getBlock() instanceof CauldronBlock &&
-                    state.get(FluidProperty.VANILLA_FLUIDS).getFluid() == Fluids.LAVA);
+            boolean insideLavaCauldron = state.getBlock() instanceof CauldronBlock &&
+                state.get(FluidProperty.VANILLA_FLUIDS).getFluid() == Fluids.LAVA;
+            // TODO
+            boolean insideLavaFluidloggable = state.getBlock() instanceof CauldronBlock &&
+                state.get(FluidProperty.VANILLA_FLUIDS).getFluid() == Fluids.LAVA;
+            info.setReturnValue(insideLavaCauldron || insideLavaFluidloggable);
         }
     }
 
